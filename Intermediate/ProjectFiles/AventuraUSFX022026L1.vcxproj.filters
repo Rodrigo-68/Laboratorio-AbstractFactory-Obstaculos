@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\AventuraUSFX022026L1.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{2A1954D9-9F34-46E0-B0C4-04272E2F8A6F}</UniqueIdentifier>
+      <UniqueIdentifier>{E4DB8469-6242-4AB9-872D-B6A3FB41BA3C}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\AventuraUSFX022026L1.Target.cs">
       <Filter>Source</Filter>
@@ -15,7 +15,7 @@
     <None Include="..\..\.gitignore" />
     <None Include="..\..\Temp.txt" />
     <Filter Include="Config">
-      <UniqueIdentifier>{86B8478C-07EB-4AB6-B46D-3D08C307F57B}</UniqueIdentifier>
+      <UniqueIdentifier>{9E18A3F1-A0DD-4BC6-9D69-C69938051E97}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -33,7 +33,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\AventuraUSFX022026L1">
-      <UniqueIdentifier>{62D1409E-6F29-4313-B542-3576976AE7EF}</UniqueIdentifier>
+      <UniqueIdentifier>{685F3BC4-42EB-4A0E-89E2-956C762A8587}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\AventuraUSFX022026L1\AventuraUSFX022026L1.Build.cs">
       <Filter>Source\AventuraUSFX022026L1</Filter>

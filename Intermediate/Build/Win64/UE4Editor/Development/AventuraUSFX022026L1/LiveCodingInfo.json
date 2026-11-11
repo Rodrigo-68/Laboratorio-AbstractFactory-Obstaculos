@@ -3,7 +3,6 @@
 	{
 		"Module.AventuraUSFX022026L1.cpp.obj": [
 			"AventuraUSFX022026L1.cpp.obj",
-			"AventuraUSFX022026L1GameMode.cpp.obj",
 			"AventuraUSFX022026L1Pawn.cpp.obj",
 			"AventuraUSFX022026L1Projectile.cpp.obj",
 			"ConstructorNave.cpp.obj",
@@ -30,7 +29,6 @@
 			"Obstaculo.cpp.obj",
 			"ObstaculoEstatico.cpp.obj",
 			"ObstaculoMovil.cpp.obj",
-			"Plataforma.cpp.obj",
 			"PlataformaAcuatica.cpp.obj",
 			"PlataformaAerea.cpp.obj",
 			"PlataformaHorizontal.cpp.obj",
@@ -42,7 +40,9 @@
 			"PlataformaVerticalAerea.cpp.obj",
 			"PlataformaVerticalTerrestre.cpp.obj",
 			"ProyectilEnemigo.cpp.obj",
-			"Puertas.cpp.obj"
+			"Puertas.cpp.obj",
+			"AventuraUSFX022026L1GameMode.cpp.obj",
+			"Plataforma.cpp.obj"
 		],
 		"Module.AventuraUSFX022026L1.gen.cpp.obj": [
 			"AventuraUSFX022026L1.init.gen.cpp.obj",

@@ -34,14 +34,13 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	TArray<AObstaculo*> aObstaculos;
+	TArray<APlataforma*> aPlataformas;
 	AFabricaPlataformas* FabricaPlataformas;
 	AFachadaPlataformas* Fachada = nullptr;
 	
 	FTimerHandle TimerEliminarPlataforma;
 
 	void EliminarPlataforma();
-
 	int tipoPlataformaActual;
 };
 

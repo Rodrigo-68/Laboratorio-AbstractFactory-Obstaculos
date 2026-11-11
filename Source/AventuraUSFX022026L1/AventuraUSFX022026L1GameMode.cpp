@@ -15,6 +15,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
 #include "FachadaPlataformas.h"
+#include "FabricaAbstractaObstaculos.h"
+#include "FabricaObstaculosAereos.h"
+#include "FabricaObstaculosTerrestres.h"
+#include "Obstaculo.h"
+#include "Engine/Engine.h"
 
 AAventuraUSFX022026L1GameMode::AAventuraUSFX022026L1GameMode()
 {
@@ -35,7 +40,7 @@ void AAventuraUSFX022026L1GameMode::BeginPlay()
 		return;
 	}
 
-	// ===== SINGLETON DEL INVENTARIO (comentado) =====
+	// ===== SINGLETON DEL INVENTARIO =====
 	//Implementacion de utilizacion de singleton para el inventario
 	//Create 4 Inventory
 	/*
@@ -127,43 +132,47 @@ void AAventuraUSFX022026L1GameMode::BeginPlay()
 
 	// ===== ABSTRACT FACTORY PARA OBSTACULOS=====
 
-AFabricaAbstractaObstaculos* FabricaAerea = World->SpawnActor<AFabricaObstaculosAereos>(AFabricaObstaculosAereos::StaticClass());
-AFabricaAbstractaObstaculos* FabricaTerrestre = World->SpawnActor<AFabricaObstaculosTerrestres>(AFabricaObstaculosTerrestres::StaticClass());
+	// ===== ABSTRACT FACTORY PARA OBSTACULOS=====
+	AFabricaAbstractaObstaculos* FabricaAerea = World->SpawnActor<AFabricaObstaculosAereos>(AFabricaObstaculosAereos::StaticClass());
+	AFabricaAbstractaObstaculos* FabricaTerrestre = World->SpawnActor<AFabricaObstaculosTerrestres>(AFabricaObstaculosTerrestres::StaticClass());
 
-TArray<AFabricaAbstractaObstaculos*> FabricasAbstractas = { FabricaAerea, FabricaTerrestre };
-FRotator RotacionAF = FRotator::ZeroRotator;
+	TArray<AFabricaAbstractaObstaculos*> FabricasAbstractas = { FabricaAerea, FabricaTerrestre };
+	FRotator RotacionAF = FRotator::ZeroRotator;
 
-for (int32 f = 0; f < FabricasAbstractas.Num(); f++)
-{
-	for (int32 i = 0; i < 3; i++)
+	for (int32 f = 0; f < FabricasAbstractas.Num(); f++)
 	{
-		FVector Base(-600.0f + i * 600.0f, -600.0f + f * 1200.0f, 200.0f);
-
-		AObstaculoEstatico* ObsEstatico = FabricasAbstractas[f]->CrearObstaculoEstatico(Base, RotacionAF);
-		AObstaculoMovil* ObsMovil = FabricasAbstractas[f]->CrearObstaculoMovil(Base + FVector(0.0f, 0.0f, 250.0f), RotacionAF);
-
-		if (ObsEstatico) aObstaculos.Add(ObsEstatico);
-		if (ObsMovil) aObstaculos.Add(ObsMovil);
+		for (int32 i = 0; i < 100; i++)
+		{
+			FVector Base(FMath::RandRange(-1500.0f, 1500.0f), FMath::RandRange(-1500.0f, 1500.0f), 200.0f);
+			AObstaculo* NuevoObs = FabricasAbstractas[f]->CrearObstaculoEstatico(Base, RotacionAF);
+			if (NuevoObs)
+			{
+				aPlataformas.Add(NuevoObs);
+			}
+		}
 	}
-}
 
-for (AObstaculo* Obs : aObstaculos)
-{
-	if (Obs) {
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Printf(TEXT("Creado: %s"), *Obs->ObtenerTipoObstaculo()));
-	}
-}
-
-	Fachada = World->SpawnActor<AFachadaPlataformas>(AFachadaPlataformas::StaticClass());
-
-	if (Fachada)
+	// ===== CREACIÓN DE LAS 200 PLATAFORMAS =====
+	for (int32 i = 0; i < 200; i++)
 	{
-		Fachada->CrearPlataformas(40);
+		FVector SpawnLocation(
+			FMath::RandRange(-2000.0f, 2000.0f),
+			FMath::RandRange(-2000.0f, 2000.0f),
+			FMath::RandRange(100.0f, 1000.0f)
+		);
+		FRotator Rotacion = FRotator::ZeroRotator;
+
+		APlataforma* NuevaPlataforma = World->SpawnActor<APlataforma>(SpawnLocation, Rotacion);
+
+		if (NuevaPlataforma)
+		{
+			aPlataformas.Add(NuevaPlataforma);
+		}
 	}
 
-	GetWorldTimerManager().SetTimer(TimerEliminarPlataforma, this, &AAventuraUSFX022026L1GameMode::EliminarPlataforma, 1.0f, true);
+	// ===== TIMER DE ELIMINACIÓN =====
+	GetWorldTimerManager().SetTimer(TimerEliminarPlataforma, this, &AAventuraUSFX022026L1GameMode::EliminarPlataforma, 0.3f, true);
 }
-
 void AAventuraUSFX022026L1GameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -171,17 +180,21 @@ void AAventuraUSFX022026L1GameMode::Tick(float DeltaTime)
 
 void AAventuraUSFX022026L1GameMode::EliminarPlataforma()
 {
-	if (Fachada != nullptr)
+	// Verificamos que el array no esté vacío para evitar errores
+	if (aPlataformas.Num() > 0)
 	{
-		Fachada->EliminarPlataformaDeTipo(static_cast<ETipoPlataforma>(tipoPlataformaActual));
-	}
+		// Generamos un índice aleatorio entre 0 y el tamaño actual del array
+		int32 IndiceAleatorio = FMath::RandRange(0, aPlataformas.Num() - 1);
 
-	if (tipoPlataformaActual >= 3)
-	{
-		tipoPlataformaActual = 0;
-	}
-	else
-	{
-		tipoPlataformaActual++;
+		APlataforma* PlataformaAEliminar = aPlataformas[IndiceAleatorio];
+
+		if (PlataformaAEliminar != nullptr)
+		{
+			// Destruimos el actor en el escenario
+			PlataformaAEliminar->Destroy();
+
+			// Lo removemos del array para que no vuelva a ser elegido
+			aPlataformas.RemoveAt(IndiceAleatorio);
+		}
 	}
 }

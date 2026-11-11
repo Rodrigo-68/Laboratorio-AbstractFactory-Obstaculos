@@ -15,7 +15,20 @@ enum class ETipoPlataforma
 	PLATAFORMA_SUBTERRANEA,
 	PLATAFORMA_ACUATICA
 };
-
+UENUM(BlueprintType)
+enum class ETipoMovimiento : uint8
+{
+	Lineal_X,
+	Lineal_Y,
+	Lineal_Z,
+	Circular_XY,
+	Circular_XZ,
+	Circular_YZ,
+	Diagonal_XY,
+	Diagonal_XZ,
+	Diagonal_YZ,
+	ZigZag
+};
 
 UCLASS()
 class AVENTURAUSFX022026L1_API APlataforma : public AActor
@@ -30,6 +43,7 @@ public:
 	bool bMovimientoActivo = true;
 
 	UStaticMeshComponent* mallaPlataforma;
+	ETipoMovimiento TipoMovimientoActual;
 
 protected:
 	// Called when the game starts or when spawned
@@ -38,14 +52,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	
-	/*
-	float ZMin;
-	float ZMax;
-	float ZActual;
-	float Velocidad;
-	float Signo;
-	*/
 
 	FVector movimientoEjes = FVector(0.0f, 0.0f, 0.0f);
 	FVector movimientoLimitesMaximos = FVector(0.0f, 0.0f, 0.0f);

@@ -13,11 +13,82 @@
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodePlataforma() {}
 // Cross Module References
+	AVENTURAUSFX022026L1_API UEnum* Z_Construct_UEnum_AventuraUSFX022026L1_ETipoMovimiento();
+	UPackage* Z_Construct_UPackage__Script_AventuraUSFX022026L1();
 	AVENTURAUSFX022026L1_API UClass* Z_Construct_UClass_APlataforma_NoRegister();
 	AVENTURAUSFX022026L1_API UClass* Z_Construct_UClass_APlataforma();
 	ENGINE_API UClass* Z_Construct_UClass_AActor();
-	UPackage* Z_Construct_UPackage__Script_AventuraUSFX022026L1();
 // End Cross Module References
+	static UEnum* ETipoMovimiento_StaticEnum()
+	{
+		static UEnum* Singleton = nullptr;
+		if (!Singleton)
+		{
+			Singleton = GetStaticEnum(Z_Construct_UEnum_AventuraUSFX022026L1_ETipoMovimiento, Z_Construct_UPackage__Script_AventuraUSFX022026L1(), TEXT("ETipoMovimiento"));
+		}
+		return Singleton;
+	}
+	template<> AVENTURAUSFX022026L1_API UEnum* StaticEnum<ETipoMovimiento>()
+	{
+		return ETipoMovimiento_StaticEnum();
+	}
+	static FCompiledInDeferEnum Z_CompiledInDeferEnum_UEnum_ETipoMovimiento(ETipoMovimiento_StaticEnum, TEXT("/Script/AventuraUSFX022026L1"), TEXT("ETipoMovimiento"), false, nullptr, nullptr);
+	uint32 Get_Z_Construct_UEnum_AventuraUSFX022026L1_ETipoMovimiento_Hash() { return 1554271980U; }
+	UEnum* Z_Construct_UEnum_AventuraUSFX022026L1_ETipoMovimiento()
+	{
+#if WITH_HOT_RELOAD
+		UPackage* Outer = Z_Construct_UPackage__Script_AventuraUSFX022026L1();
+		static UEnum* ReturnEnum = FindExistingEnumIfHotReloadOrDynamic(Outer, TEXT("ETipoMovimiento"), 0, Get_Z_Construct_UEnum_AventuraUSFX022026L1_ETipoMovimiento_Hash(), false);
+#else
+		static UEnum* ReturnEnum = nullptr;
+#endif // WITH_HOT_RELOAD
+		if (!ReturnEnum)
+		{
+			static const UE4CodeGen_Private::FEnumeratorParam Enumerators[] = {
+				{ "ETipoMovimiento::Lineal_X", (int64)ETipoMovimiento::Lineal_X },
+				{ "ETipoMovimiento::Lineal_Y", (int64)ETipoMovimiento::Lineal_Y },
+				{ "ETipoMovimiento::Lineal_Z", (int64)ETipoMovimiento::Lineal_Z },
+				{ "ETipoMovimiento::Circular_XY", (int64)ETipoMovimiento::Circular_XY },
+				{ "ETipoMovimiento::Circular_XZ", (int64)ETipoMovimiento::Circular_XZ },
+				{ "ETipoMovimiento::Circular_YZ", (int64)ETipoMovimiento::Circular_YZ },
+				{ "ETipoMovimiento::Diagonal_XY", (int64)ETipoMovimiento::Diagonal_XY },
+				{ "ETipoMovimiento::Diagonal_XZ", (int64)ETipoMovimiento::Diagonal_XZ },
+				{ "ETipoMovimiento::Diagonal_YZ", (int64)ETipoMovimiento::Diagonal_YZ },
+				{ "ETipoMovimiento::ZigZag", (int64)ETipoMovimiento::ZigZag },
+			};
+#if WITH_METADATA
+			const UE4CodeGen_Private::FMetaDataPairParam Enum_MetaDataParams[] = {
+				{ "BlueprintType", "true" },
+				{ "Circular_XY.Name", "ETipoMovimiento::Circular_XY" },
+				{ "Circular_XZ.Name", "ETipoMovimiento::Circular_XZ" },
+				{ "Circular_YZ.Name", "ETipoMovimiento::Circular_YZ" },
+				{ "Diagonal_XY.Name", "ETipoMovimiento::Diagonal_XY" },
+				{ "Diagonal_XZ.Name", "ETipoMovimiento::Diagonal_XZ" },
+				{ "Diagonal_YZ.Name", "ETipoMovimiento::Diagonal_YZ" },
+				{ "Lineal_X.Name", "ETipoMovimiento::Lineal_X" },
+				{ "Lineal_Y.Name", "ETipoMovimiento::Lineal_Y" },
+				{ "Lineal_Z.Name", "ETipoMovimiento::Lineal_Z" },
+				{ "ModuleRelativePath", "Plataforma.h" },
+				{ "ZigZag.Name", "ETipoMovimiento::ZigZag" },
+			};
+#endif
+			static const UE4CodeGen_Private::FEnumParams EnumParams = {
+				(UObject*(*)())Z_Construct_UPackage__Script_AventuraUSFX022026L1,
+				nullptr,
+				"ETipoMovimiento",
+				"ETipoMovimiento",
+				Enumerators,
+				UE_ARRAY_COUNT(Enumerators),
+				RF_Public|RF_Transient|RF_MarkAsNative,
+				EEnumFlags::None,
+				UE4CodeGen_Private::EDynamicType::NotDynamic,
+				(uint8)UEnum::ECppForm::EnumClass,
+				METADATA_PARAMS(Enum_MetaDataParams, UE_ARRAY_COUNT(Enum_MetaDataParams))
+			};
+			UE4CodeGen_Private::ConstructUEnum(ReturnEnum, EnumParams);
+		}
+		return ReturnEnum;
+	}
 	void APlataforma::StaticRegisterNativesAPlataforma()
 	{
 	}

@@ -40,7 +40,6 @@ void EmptyLinkFunctionForGeneratedCodeFabricaAbstractaObstaculosAereos() {}
 	};
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_AFabricaAbstractaObstaculosAereos_Statics::Class_MetaDataParams[] = {
-		{ "Comment", "/**\n * \n */" },
 		{ "IncludePath", "FabricaAbstractaObstaculosAereos.h" },
 		{ "ModuleRelativePath", "FabricaAbstractaObstaculosAereos.h" },
 	};
@@ -72,7 +71,7 @@ void EmptyLinkFunctionForGeneratedCodeFabricaAbstractaObstaculosAereos() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(AFabricaAbstractaObstaculosAereos, 3037979526);
+	IMPLEMENT_CLASS(AFabricaAbstractaObstaculosAereos, 171112126);
 	template<> AVENTURAUSFX022026L1_API UClass* StaticClass<AFabricaAbstractaObstaculosAereos>()
 	{
 		return AFabricaAbstractaObstaculosAereos::StaticClass();

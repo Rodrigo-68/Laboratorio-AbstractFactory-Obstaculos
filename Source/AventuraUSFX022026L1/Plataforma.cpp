@@ -33,6 +33,7 @@ APlataforma::APlataforma()
 	movimientoVelocidades = FVector(FMath::RandRange(50.0f, 200.0f), FMath::RandRange(50.0f, 200.0f), FMath::RandRange(50.0f, 200.0f));
 	movimientoDireccion = FVector(FMath::RandRange(-1.0f, 1.0f), FMath::RandRange(-1.0f, 1.0f), FMath::RandRange(-1.0f, 1.0f));
 	//movimientoDireccion = FVector(1.0f, 0.0f, 0.0f);
+	TipoMovimientoActual = static_cast<ETipoMovimiento>(FMath::RandRange(0, 9));
 
 	TiempoTranscurrido = 0.0f;
 }
@@ -49,25 +50,10 @@ void APlataforma::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Actualizamos el tiempo transcurrido para todos los cálculos
 	TiempoTranscurrido += DeltaTime;
 
-	/*
-	FVector PosicionActual = GetActorLocation();
-
-	ZActual = PosicionActual.Z;
-
-	if ((ZActual >= ZMax) || (ZActual <= ZMin))
-	{
-		Signo = Signo * -1;
-	}
-	
-	ZActual = ZActual + Signo * Velocidad * DeltaTime;
-
-	PosicionActual.Z = ZActual;
-
-	SetActorLocation(PosicionActual);
-	*/
-
+	// Lógica de pausa: 5 segundos estáticas, 10 segundos moviéndose (Ciclo de 15s)
 	float TiempoCiclo = FMath::Fmod(TiempoTranscurrido, 15.0f);
 
 	if (TiempoCiclo < 5.0f)
@@ -75,32 +61,80 @@ void APlataforma::Tick(float DeltaTime)
 		return;
 	}
 
-
 	if (TiempoCiclo >= 5.0f && TiempoCiclo < 15.0f)
 	{
-
 		posicionActual = GetActorLocation();
+		FVector posicionNueva = posicionActual;
 
+		float TiempoLocal = TiempoCiclo - 5.0f;
 
-		if (posicionActual.X >= movimientoLimitesMaximos.X || posicionActual.X <= movimientoLimitesMinimos.X) {
-			movimientoDireccion.X *= -1.0f;
+		switch (TipoMovimientoActual)
+		{
+		case ETipoMovimiento::Lineal_X:
+			if (posicionActual.X >= movimientoLimitesMaximos.X || posicionActual.X <= movimientoLimitesMinimos.X)
+				movimientoDireccion.X *= -1.0f;
+			posicionNueva.X += movimientoDireccion.X * movimientoVelocidades.X * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Lineal_Y:
+			if (posicionActual.Y >= movimientoLimitesMaximos.Y || posicionActual.Y <= movimientoLimitesMinimos.Y)
+				movimientoDireccion.Y *= -1.0f;
+			posicionNueva.Y += movimientoDireccion.Y * movimientoVelocidades.Y * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Lineal_Z:
+			if (posicionActual.Z >= movimientoLimitesMaximos.Z || posicionActual.Z <= movimientoLimitesMinimos.Z)
+				movimientoDireccion.Z *= -1.0f;
+			posicionNueva.Z += movimientoDireccion.Z * movimientoVelocidades.Z * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Circular_XY:
+			posicionNueva.X += FMath::Cos(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			posicionNueva.Y += FMath::Sin(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Circular_XZ:
+			posicionNueva.X += FMath::Cos(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			posicionNueva.Z += FMath::Sin(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Circular_YZ:
+			posicionNueva.Y += FMath::Cos(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			posicionNueva.Z += FMath::Sin(TiempoLocal * 2.0f) * 150.0f * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Diagonal_XY:
+			if (posicionActual.X >= movimientoLimitesMaximos.X || posicionActual.X <= movimientoLimitesMinimos.X) movimientoDireccion.X *= -1.0f;
+			if (posicionActual.Y >= movimientoLimitesMaximos.Y || posicionActual.Y <= movimientoLimitesMinimos.Y) movimientoDireccion.Y *= -1.0f;
+			posicionNueva.X += movimientoDireccion.X * movimientoVelocidades.X * DeltaTime;
+			posicionNueva.Y += movimientoDireccion.Y * movimientoVelocidades.Y * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Diagonal_XZ:
+			if (posicionActual.X >= movimientoLimitesMaximos.X || posicionActual.X <= movimientoLimitesMinimos.X) movimientoDireccion.X *= -1.0f;
+			if (posicionActual.Z >= movimientoLimitesMaximos.Z || posicionActual.Z <= movimientoLimitesMinimos.Z) movimientoDireccion.Z *= -1.0f;
+			posicionNueva.X += movimientoDireccion.X * movimientoVelocidades.X * DeltaTime;
+			posicionNueva.Z += movimientoDireccion.Z * movimientoVelocidades.Z * DeltaTime;
+			break;
+
+		case ETipoMovimiento::Diagonal_YZ:
+			if (posicionActual.Y >= movimientoLimitesMaximos.Y || posicionActual.Y <= movimientoLimitesMinimos.Y) movimientoDireccion.Y *= -1.0f;
+			if (posicionActual.Z >= movimientoLimitesMaximos.Z || posicionActual.Z <= movimientoLimitesMinimos.Z) movimientoDireccion.Z *= -1.0f;
+			posicionNueva.Y += movimientoDireccion.Y * movimientoVelocidades.Y * DeltaTime;
+			posicionNueva.Z += movimientoDireccion.Z * movimientoVelocidades.Z * DeltaTime;
+			break;
+
+		case ETipoMovimiento::ZigZag:
+			if (FMath::Fmod(TiempoLocal, 3.0f) < 1.5f) {
+				posicionNueva.X += movimientoVelocidades.X * DeltaTime;
+			}
+			else {
+				posicionNueva.Y += movimientoVelocidades.Y * DeltaTime;
+			}
+			break;
 		}
 
-		if (posicionActual.Y >= movimientoLimitesMaximos.Y || posicionActual.Y <= movimientoLimitesMinimos.Y) {
-			movimientoDireccion.Y *= -1.0f;
-		}
-
-		if (posicionActual.Z >= movimientoLimitesMaximos.Z || posicionActual.Z <= movimientoLimitesMinimos.Z) {
-			movimientoDireccion.Z *= -1.0f;
-		}
-
-		FVector posicionNueva = posicionActual + (movimientoDireccion * movimientoVelocidades * DeltaTime);
 		SetActorLocation(posicionNueva);
 	}
 
-	if (TiempoCiclo >= 10.0f && TiempoCiclo < 15.0f)
-	{
-		return;
-	}
 }
-
