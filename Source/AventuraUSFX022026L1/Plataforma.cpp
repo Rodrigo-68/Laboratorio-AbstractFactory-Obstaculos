@@ -4,6 +4,8 @@
 #include "Plataforma.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
+#include "ComponenteEscudo.h"
+#include "ComponenteMotor.h"
 #include "Engine/StaticMesh.h"
 
 // Sets default values
@@ -36,6 +38,26 @@ APlataforma::APlataforma()
 	TipoMovimientoActual = static_cast<ETipoMovimiento>(FMath::RandRange(0, 9));
 
 	TiempoTranscurrido = 0.0f;
+}
+
+void APlataforma::AdjuntarEscudo(AComponenteEscudo* Escudo)
+{
+	if (Escudo)
+	{
+		EscudoConstruido = Escudo;
+		Escudo->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+		Escudo->SetActorRelativeLocation(FVector(0, 0, 0)); // Centrado
+	}
+}
+
+void APlataforma::AdjuntarMotor(AComponenteMotor* Motor)
+{
+	if (Motor)
+	{
+		MotorConstruido = Motor;
+		Motor->AttachToActor(this, FAttachmentTransformRules::KeepRelativeTransform);
+		Motor->SetActorRelativeLocation(FVector(0, 0, -50)); // Debajo de la plataforma
+	}
 }
 
 // Called when the game starts or when spawned

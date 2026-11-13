@@ -45,6 +45,14 @@ public:
 	UStaticMeshComponent* mallaPlataforma;
 	ETipoMovimiento TipoMovimientoActual;
 
+	// Punteros a los componentes que se construirán
+	class AComponenteEscudo* EscudoConstruido = nullptr;
+	class AComponenteMotor* MotorConstruido = nullptr;
+
+	// Funciones para que el Builder adjunte los componentes
+	void AdjuntarEscudo(AComponenteEscudo* Escudo);
+	void AdjuntarMotor(AComponenteMotor* Motor);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

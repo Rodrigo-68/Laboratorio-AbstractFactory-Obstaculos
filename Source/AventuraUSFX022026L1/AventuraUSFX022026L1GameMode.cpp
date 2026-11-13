@@ -7,11 +7,6 @@
 #include "PlataformaAcuatica.h"
 #include "Inventory.h"
 #include "FabricaPlataformaConcreta.h"
-#include "DirectorFlota.h"
-#include "ConstructorNaveCaza.h"
-#include "ConstructorNaveCrucero.h"
-#include "ConstructorNaveAcorazado.h"
-#include "NaveEnemiga.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Pawn.h"
 #include "FachadaPlataformas.h"
@@ -19,6 +14,9 @@
 #include "FabricaObstaculosAereos.h"
 #include "FabricaObstaculosTerrestres.h"
 #include "Obstaculo.h"
+#include "ConstructorPlataformaBasica.h"
+#include "ConstructorPlataformaAvanzada.h"
+#include "DirectorPlataforma.h"
 #include "Engine/Engine.h"
 
 AAventuraUSFX022026L1GameMode::AAventuraUSFX022026L1GameMode()
@@ -87,52 +85,8 @@ void AAventuraUSFX022026L1GameMode::BeginPlay()
 	*/
 
 
-	// ===== BUILDER DE NAVES ENEMIGAS=====
+	// ===== ABSTRACT FACTORY PARA OBSTACULOS=====
 	/*
-	AConstructorNaveCaza* ConstructorCaza =
-		World->SpawnActor<AConstructorNaveCaza>(AConstructorNaveCaza::StaticClass());
-	AConstructorNaveCrucero* ConstructorCrucero =
-		World->SpawnActor<AConstructorNaveCrucero>(AConstructorNaveCrucero::StaticClass());
-	AConstructorNaveAcorazado* ConstructorAcorazado =
-		World->SpawnActor<AConstructorNaveAcorazado>(AConstructorNaveAcorazado::StaticClass());
-	ADirectorFlota* DirectorFlota =
-		World->SpawnActor<ADirectorFlota>(ADirectorFlota::StaticClass());
-
-	FRotator RotacionN = FRotator::ZeroRotator;
-	APawn* PawnJugador = UGameplayStatics::GetPlayerPawn(this, 0);
-	const float AlturaZ = PawnJugador ? PawnJugador->GetActorLocation().Z : 604.7f;
-
-	for (int32 i = 0; i < 3; i++)
-	{
-		// --- Fila de CAZAS ---
-		DirectorFlota->SetConstructor(ConstructorCaza);
-		DirectorFlota->ConstruirNaveCompleta(FVector(-700.0f, -600.0f + i * 600.0f, 200.0f), RotacionN);
-		ANaveEnemiga* Caza = DirectorFlota->GetNave();
-		if (Caza && i == 0) Caza->Describir();
-
-		// --- Fila de CRUCEROS ---
-		DirectorFlota->SetConstructor(ConstructorCrucero);
-		DirectorFlota->ConstruirNaveCompleta(FVector(0.0f, -600.0f + i * 600.0f, 200.0f), RotacionN);
-		ANaveEnemiga* Crucero = DirectorFlota->GetNave();
-		if (Crucero && i == 0) Crucero->Describir();
-
-		// --- Fila de ACORAZADOS ---
-		DirectorFlota->SetConstructor(ConstructorAcorazado);
-		DirectorFlota->ConstruirNaveCompleta(FVector(700.0f, -600.0f + i * 600.0f, 200.0f), RotacionN);
-		ANaveEnemiga* Acorazado = DirectorFlota->GetNave();
-		if (Acorazado && i == 0) Acorazado->Describir();
-	}
-
-	// --- Receta BASICA: el mismo constructor, pero con menos pasos ---
-	DirectorFlota->SetConstructor(ConstructorCrucero);
-	DirectorFlota->ConstruirNaveBasica(FVector(-350.0f, 0.0f, 200.0f), RotacionN);
-	ANaveEnemiga* Basica = DirectorFlota->GetNave();
-	if (Basica) Basica->Describir();
-	*/
-
-	// ===== ABSTRACT FACTORY PARA OBSTACULOS=====
-
-	// ===== ABSTRACT FACTORY PARA OBSTACULOS=====
 	AFabricaAbstractaObstaculos* FabricaAerea = World->SpawnActor<AFabricaObstaculosAereos>(AFabricaObstaculosAereos::StaticClass());
 	AFabricaAbstractaObstaculos* FabricaTerrestre = World->SpawnActor<AFabricaObstaculosTerrestres>(AFabricaObstaculosTerrestres::StaticClass());
 
@@ -151,28 +105,51 @@ void AAventuraUSFX022026L1GameMode::BeginPlay()
 			}
 		}
 	}
+	*/
 
-	// ===== CREACIÓN DE LAS 200 PLATAFORMAS =====
-	for (int32 i = 0; i < 200; i++)
-	{
-		FVector SpawnLocation(
-			FMath::RandRange(-2000.0f, 2000.0f),
-			FMath::RandRange(-2000.0f, 2000.0f),
-			FMath::RandRange(100.0f, 1000.0f)
-		);
-		FRotator Rotacion = FRotator::ZeroRotator;
-
-		APlataforma* NuevaPlataforma = World->SpawnActor<APlataforma>(SpawnLocation, Rotacion);
-
-		if (NuevaPlataforma)
+	/*
+		// ===== CREACIÓN DE LAS 200 PLATAFORMAS =====
+		for (int32 i = 0; i < 200; i++)
 		{
-			aPlataformas.Add(NuevaPlataforma);
+			FVector SpawnLocation(
+				FMath::RandRange(-2000.0f, 2000.0f),
+				FMath::RandRange(-2000.0f, 2000.0f),
+				FMath::RandRange(100.0f, 1000.0f)
+			);
+			FRotator Rotacion = FRotator::ZeroRotator;
+
+			APlataforma* NuevaPlataforma = World->SpawnActor<APlataforma>(SpawnLocation, Rotacion);
+
+			if (NuevaPlataforma)
+			{
+				aPlataformas.Add(NuevaPlataforma);
+			}
 		}
+
 	}
 
-	// ===== TIMER DE ELIMINACIÓN =====
-	GetWorldTimerManager().SetTimer(TimerEliminarPlataforma, this, &AAventuraUSFX022026L1GameMode::EliminarPlataforma, 0.3f, true);
+	*/
+	// ===== BUILDER DE PLATAFORMAS =====
+	// 1. Creamos los constructores concretos y el director
+	AConstructorPlataformaBasica* ConstructorBasico = World->SpawnActor<AConstructorPlataformaBasica>(AConstructorPlataformaBasica::StaticClass());
+	AConstructorPlataformaAvanzada* ConstructorAvanzado = World->SpawnActor<AConstructorPlataformaAvanzada>(AConstructorPlataformaAvanzada::StaticClass());
+	ADirectorPlataforma* Director = World->SpawnActor<ADirectorPlataforma>(ADirectorPlataforma::StaticClass());
+
+	// 2. Construimos una plataforma BÁSICA
+	Director->SetConstructor(ConstructorBasico);
+	Director->ConstruirPlataformaBasica(FVector(0, -500, 200), FRotator::ZeroRotator);
+	APlataforma* PlataformaBasica = ConstructorBasico->ObtenerPlataforma();
+	if (PlataformaBasica) aPlataformas.Add(PlataformaBasica);
+
+	// 3. Construimos una plataforma COMPLETA (Avanzada)
+	Director->SetConstructor(ConstructorAvanzado);
+	Director->ConstruirPlataformaCompleta(FVector(0, 500, 200), FRotator::ZeroRotator);
+	APlataforma* PlataformaAvanzada = ConstructorAvanzado->ObtenerPlataforma();
+	if (PlataformaAvanzada) aPlataformas.Add(PlataformaAvanzada);
+
+	//GetWorldTimerManager().SetTimer(TimerEliminarPlataforma, this, &AAventuraUSFX022026L1GameMode::EliminarPlataforma, 0.3f, true);
 }
+
 void AAventuraUSFX022026L1GameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -180,20 +157,16 @@ void AAventuraUSFX022026L1GameMode::Tick(float DeltaTime)
 
 void AAventuraUSFX022026L1GameMode::EliminarPlataforma()
 {
-	// Verificamos que el array no esté vacío para evitar errores
 	if (aPlataformas.Num() > 0)
 	{
-		// Generamos un índice aleatorio entre 0 y el tamaño actual del array
 		int32 IndiceAleatorio = FMath::RandRange(0, aPlataformas.Num() - 1);
 
 		APlataforma* PlataformaAEliminar = aPlataformas[IndiceAleatorio];
 
 		if (PlataformaAEliminar != nullptr)
 		{
-			// Destruimos el actor en el escenario
 			PlataformaAEliminar->Destroy();
 
-			// Lo removemos del array para que no vuelva a ser elegido
 			aPlataformas.RemoveAt(IndiceAleatorio);
 		}
 	}
